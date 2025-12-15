@@ -1,16 +1,29 @@
 {
-  "name": "naeewala",
+  "name": "naeewala-server",
   "version": "1.0.0",
   "description": "server for naeewala",
   "license": "ISC",
   "author": "kushal jangid",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:init": "node src/db/dbCreate.js && npx knex migrate:latest",
+    "db:rollback": "npx knex migrate:rollback --all",
+    "db:migrate-all": "npx knex migrate:make init_all_tables",
+    "db:migrate": "npx knex migrate:latest",
+    "db:reset-migrate": "node src/db/resetMigrations.js",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "knex": "^3.1.0",
+    "mysql2": "^3.15.3",
+    "objection": "^3.1.5"
   }
 }

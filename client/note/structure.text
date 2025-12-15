@@ -1,0 +1,100 @@
+naee-wala/
+│
+├── client/                # React (Vite)
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── public/
+│   │   │   │   ├── Landing.jsx
+│   │   │   │   ├── Login.jsx
+│   │   │   │   ├── Register.jsx
+│   │   │   ├── customer/
+│   │   │   │   ├── Home.jsx
+│   │   │   │   ├── Profile.jsx
+│   │   │   │   ├── Appointments.jsx
+│   │   │   ├── barber/
+│   │   │   ├── admin/
+│   │   │
+│   │   ├── components/
+│   │   │   ├── ui/
+│   │   │   ├── layout/
+│   │   │
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx
+│   │   │   ├── ThemeContext.jsx
+│   │   │
+│   │   ├── services/
+│   │   │   ├── auth.service.js
+│   │   │   ├── api.js
+│   │   │
+│   │   ├── hooks/
+│   │   ├── utils/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   └── tailwind.config.js
+│
+├── server/                # Node + Express + prisma (now not using in this project)
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── server.js
+│   │   ├── prisma/
+│   │   │   └── schema.prisma
+│   │   ├── routes/
+│   │   │   ├── auth.routes.js
+│   │   │   ├── barber.routes.js
+│   │   │   ├── customer.routes.js
+│   │   │   └── admin.routes.js
+│   │   ├── controllers/
+│   │   ├── middlewares/
+│   │   │   ├── auth.middleware.js
+│   │   │   ├── role.middleware.js
+│   │   ├── utils/
+│   │   │   ├── jwt.js
+│   │   │   ├── cookies.js
+│   │   └── services/
+│   │
+│   └── package.json
+│
+└── README.md
+
+
+
+server/
+ ├── src/
+ │   ├── app.js
+ │   ├── server.js
+ │   ├── db/
+ │   │   ├── knex.js
+ │   │   ├── migrations/
+ │   │   ├── seeds/
+ │   │
+ │   ├── models/
+ │   │   ├── User.js
+ │   │   ├── Barber.js
+ │   │   ├── Address.js
+ │   │   ├── BarberShop.js
+ │   │   ├── Session.js
+ │   │   └── index.js
+ │   │
+ │   ├── routes/
+ │   │   ├── auth.routes.js
+ │   │   ├── barber.routes.js
+ │   │   ├── customer.routes.js
+ │   │
+ │   ├── controllers/
+ │   │   ├── auth.controller.js
+ │   │   ├── barber.controller.js
+ │   │
+ │   ├── middlewares/
+ │   │   ├── auth.middleware.js
+ │   │   ├── role.middleware.js
+ │   │
+ │   ├── utils/
+ │   │   ├── jwt.js
+ │   │   ├── cookies.js
+ │   │
+ │   └── config/
+ │       └── env.js
+ │
+ └── knexfile.js
+
