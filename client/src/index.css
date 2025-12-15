@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* html,
+body {
+  @apply bg-white text-black dark:bg-[#0C1519] dark:text-[#D3C3B9];
+} */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-mint: oklch(0.72 0.11 178);
+  --font-poppins: Poppins, sans-serif;
+  --font-script: Great Vibes, cursive;
+}
