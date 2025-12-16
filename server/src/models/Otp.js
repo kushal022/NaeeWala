@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
 export default class Otp extends BaseModel {
-  static tableName = "otp";
+  static tableName = "otps";
 
   static get jsonSchema() {
     return {
@@ -11,10 +11,11 @@ export default class Otp extends BaseModel {
       properties: {
         id: { type: "integer" },
         to: { type: "string" },
-        via: { type: "string" },
+        via: { type: "string" }, // EMAIL||SMS
         code: { type: "string" },
         expiresAt: { type: "string" },
         used: { type: "boolean" },
+        attempts: {type: "integer"},
         createdAt: { type: "string" }
       }
     };

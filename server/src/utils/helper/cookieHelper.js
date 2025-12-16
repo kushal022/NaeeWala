@@ -17,7 +17,7 @@ export const setCookie = (res, {name, value, maxAgeSec  }) => {
 
 //* REMOVE / CLEAR
 export const clearCookie = (res, name = "access_token") => {
-  res.cookie(name, value='', {
+  res.cookie(name, '', {
     httpOnly: httpOnly,
     secure,
     sameSite: "lax",
