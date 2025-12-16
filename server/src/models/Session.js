@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
 export default class Session extends BaseModel {
-  static tableName = "session";
+  static tableName = "sessions";
 
   static get jsonSchema() {
     return {

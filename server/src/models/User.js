@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
 export default class User extends BaseModel {
-  static tableName = "user";
+  static tableName = "users";
 
   static get jsonSchema() {
     return {
@@ -28,9 +28,9 @@ export default class User extends BaseModel {
   }
 
   static get relationMappings() {
-    const Address = require("./Address.js").default;
-    const Barber = require("./Barber.js").default;
-    const Session = require("./Session.js").default;
+    const Address = import ("./Address.js").default;
+    const Barber = import ("./Barber.js").default;
+    const Session = import ("./Session.js").default;
 
     return {
       address: {

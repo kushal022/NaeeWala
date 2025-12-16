@@ -24,6 +24,7 @@
     "jsonwebtoken": "^9.0.3",
     "knex": "^3.1.0",
     "mysql2": "^3.15.3",
-    "objection": "^3.1.5"
+    "objection": "^3.1.5",
+    "zod": "^4.2.0"
   }
 }
