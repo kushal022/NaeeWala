@@ -1,13 +1,12 @@
 import BaseModel from "./BaseModel.js";
 
 export default class Service extends BaseModel {
-  static tableName = "service";
+  static tableName = "services";
 
   static get jsonSchema() {
     return {
       type: "object",
       required: ["barberId", "title", "price"],
-
       properties: {
         id: { type: "integer" },
         barberId: { type: "integer" },

@@ -14,7 +14,7 @@ export default class Session extends BaseModel {
         refreshToken: { type: "string" },
         userAgent: { type: ["string", "null"] },
         ip: { type: ["string", "null"] },
-        expiresAt: { type: "string" },
+        expiresAt: { type: "string",format:"date-time" },
         createdAt: { type: "string" }
       }
     };

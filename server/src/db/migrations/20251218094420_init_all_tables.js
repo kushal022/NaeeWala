@@ -2,7 +2,23 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
+
 export async function up(knex) {
+
+  
+  // ================= ADDRESSES =================
+  await knex.schema.createTable("addresses", table => {
+    table.increments("id").primary();
+    table.string("street").notNullable();
+    table.string("landmark");
+    table.string("city").notNullable();
+    table.string("state").notNullable();
+    table.string("country").defaultTo("India");
+    table.string("pincode").notNullable();
+    table.float("lat");
+    table.float("lng");
+    table.timestamp("createdAt").defaultTo(knex.fn.now());
+  });
 
   // ================= USERS =================
   await knex.schema.createTable("users", table => {
@@ -19,30 +35,19 @@ export async function up(knex) {
     table.float("wallet").defaultTo(0);
     table.boolean("isEmailVerified").defaultTo(false);
     table.boolean("isPhoneVerified").defaultTo(false);
+    table.integer("addressId").unsigned().nullable().references("addresses.id").onDelete("SET NULL");;
     table.timestamp("createdAt").defaultTo(knex.fn.now());
   });
 
-  // ================= ADDRESSES =================
-  await knex.schema.createTable("addresses", table => {
-    table.increments("id").primary();
-    table.string("street").notNullable();
-    table.string("landmark");
-    table.string("city").notNullable();
-    table.string("state").notNullable();
-    table.string("country").defaultTo("India");
-    table.string("pincode").notNullable();
-    table.float("lat");
-    table.float("lng");
-    table.timestamp("createdAt").defaultTo(knex.fn.now());
-  });
+
 
   // ================= BARBERS =================
   await knex.schema.createTable("barbers", table => {
     table.increments("id").primary();
     table.integer("userId").unsigned().notNullable().unique()
-      .references("id").inTable("users").onDelete("CASCADE");
+      .references("users.id").onDelete("CASCADE");
     table.integer("addressId").unsigned().unique()
-      .references("id").inTable("addresses");
+      .references("addresses.id").onDelete("SET NULL");
     table.enum("status", ["pending", "approved", "rejected"])
       .defaultTo("pending");
     table.float("rating").defaultTo(0);
@@ -51,12 +56,12 @@ export async function up(knex) {
   });
 
   // ================= BARBER SHOPS =================
-  await knex.schema.createTable("barber_shops", table => {
+  await knex.schema.createTable("barberShops", table => {
     table.increments("id").primary();
     table.integer("barberId").unsigned().notNullable().unique()
-      .references("id").inTable("barbers").onDelete("CASCADE");
+      .references("barbers.id").onDelete("CASCADE");
     table.integer("addressId").unsigned().unique()
-      .references("id").inTable("addresses");
+      .references("addresses.id").onDelete("SET NULL");
     table.string("shopName").notNullable();
     table.text("description");
     table.string("licenseNo");
@@ -71,7 +76,7 @@ export async function up(knex) {
   await knex.schema.createTable("banks", table => {
     table.increments("id").primary();
     table.integer("barberId").unsigned().notNullable().unique()
-      .references("id").inTable("barbers").onDelete("CASCADE");
+      .references("barbers.id").onDelete("CASCADE");
     table.string("accountHolderName");
     table.string("accountNumber");
     table.string("ifsc");
@@ -84,10 +89,10 @@ export async function up(knex) {
   });
 
   // ================= BARBER DOCUMENTS =================
-  await knex.schema.createTable("barber_documents", table => {
+  await knex.schema.createTable("barberDocuments", table => {
     table.increments("id").primary();
     table.integer("barberId").unsigned().notNullable()
-      .references("id").inTable("barbers").onDelete("CASCADE");
+      .references("barbers.id").onDelete("CASCADE");
     table.enum("type", [
       "AADHAAR",
       "PANCARD",
@@ -105,7 +110,7 @@ export async function up(knex) {
   await knex.schema.createTable("services", table => {
     table.increments("id").primary();
     table.integer("barberId").unsigned().notNullable()
-      .references("id").inTable("barbers").onDelete("CASCADE");
+      .references("barbers.id").onDelete("CASCADE");
     table.string("title").notNullable();
     table.float("price").notNullable();
     table.integer("durationMinutes").notNullable();
@@ -117,11 +122,11 @@ export async function up(knex) {
   await knex.schema.createTable("appointments", table => {
     table.increments("id").primary();
     table.integer("customerId").unsigned().notNullable()
-      .references("id").inTable("users").onDelete("CASCADE");
+      .references("users.id").onDelete("CASCADE");
     table.integer("barberId").unsigned().notNullable()
-      .references("id").inTable("barbers").onDelete("CASCADE");
+      .references("barbers.id").onDelete("CASCADE");
     table.integer("serviceId").unsigned()
-      .references("id").inTable("services");
+      .references("services.id").onDelete("SET NULL");
     table.dateTime("startAt").notNullable();
     table.dateTime("endAt");
     table.enum("status", [
@@ -141,9 +146,9 @@ export async function up(knex) {
   await knex.schema.createTable("reviews", table => {
     table.increments("id").primary();
     table.integer("barberId").unsigned().notNullable()
-      .references("id").inTable("barbers").onDelete("CASCADE");
+      .references("barbers.id").onDelete("CASCADE");
     table.integer("customerId").unsigned().notNullable()
-      .references("id").inTable("users").onDelete("CASCADE");
+      .references("users.id").onDelete("CASCADE");
     table.integer("rating").notNullable();
     table.text("comment");
     table.timestamp("createdAt").defaultTo(knex.fn.now());
@@ -152,6 +157,8 @@ export async function up(knex) {
   // ================= SUBSCRIPTIONS =================
   await knex.schema.createTable("subscriptions", table => {
     table.increments("id").primary();
+    table.integer("barberId").unsigned().nullable()
+      .references("barbers.id").onDelete("CASCADE");
     table.string("name").notNullable();
     table.float("pricePerMonth").notNullable();
     table.json("features");
@@ -166,6 +173,7 @@ export async function up(knex) {
     table.string("code").notNullable();
     table.dateTime("expiresAt").notNullable();
     table.boolean("used").defaultTo(false);
+    table.integer("attempts").defaultTo(0);
     table.timestamp("createdAt").defaultTo(knex.fn.now());
   });
 
@@ -173,7 +181,7 @@ export async function up(knex) {
   await knex.schema.createTable("sessions", table => {
     table.increments("id").primary();
     table.integer("userId").unsigned().notNullable()
-      .references("id").inTable("users").onDelete("CASCADE");
+      .references("users.id").onDelete("CASCADE");
     table.string("refreshToken").notNullable().unique();
     table.string("userAgent");
     table.string("ip");
@@ -186,7 +194,6 @@ export async function up(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-
 export async function down(knex) {
   await knex.schema
     .dropTableIfExists("sessions")
@@ -195,9 +202,9 @@ export async function down(knex) {
     .dropTableIfExists("reviews")
     .dropTableIfExists("appointments")
     .dropTableIfExists("services")
-    .dropTableIfExists("barber_documents")
+    .dropTableIfExists("barberDocuments")
     .dropTableIfExists("banks")
-    .dropTableIfExists("barber_shops")
+    .dropTableIfExists("barberShops")
     .dropTableIfExists("barbers")
     .dropTableIfExists("addresses")
     .dropTableIfExists("users");

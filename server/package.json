@@ -7,9 +7,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "db:init": "node src/db/dbCreate.js && npx knex migrate:latest",
-    "db:rollback": "npx knex migrate:rollback --all",
+    "db:init": "node src/db/dbCreate.js",
     "db:migrate-all": "npx knex migrate:make init_all_tables",
+    "db:migrate:make": "npx knex migrate:make new",
+    "db:rollback": "npx knex migrate:rollback --all",
     "db:migrate": "npx knex migrate:latest",
     "db:migrate:status": "npx knex migrate:status",
     "db:reset-migrate": "node src/db/resetMigrations.js",

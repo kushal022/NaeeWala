@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
 export default class BarberShop extends BaseModel {
-  static tableName = "barbershop";
+  static tableName = "barberShops";
 
   static get jsonSchema() {
     return {

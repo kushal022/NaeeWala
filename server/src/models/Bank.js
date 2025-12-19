@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js";
 
 export default class Bank extends BaseModel {
-  static tableName = "bank";
+  static tableName = "banks";
 
   static get jsonSchema() {
     return {

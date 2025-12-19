@@ -18,8 +18,9 @@ import { clearCookie, setCookie } from "../../utils/helper/cookieHelper.js";
 // } from "../utils/jwt.js";
 // import { setAuthCookies, clearAuthCookies } from "../utils/cookies.js";
 
-const access_token_cookie_exp = Number(15 * 60 * 1000);
-const refresh_token_cookie_exp = Number(7 * 24 * 60 * 60 * 1000);
+const access_token_cookie_exp =Number( process.env.ACCESS_TOKEN_COOKIE_EXP || 15 * 60 * 1000); //900000 : 15MIN
+const refresh_token_cookie_exp =Number( process.env.REFRESH_TOKEN_COOKIE_EXP || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
+const session_exp_at =Number( process.env.SESSION_EXP_AT || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
 
 //  * CUSTOMER REGISTER (OTP verified assumed)
 export const registerCustomerCtrl = async (req, res) => {
@@ -116,10 +117,8 @@ export const loginCtrl = async (req, res) => {
     const refreshToken = generateRefreshToken({ id: user.id });
 
     // Save refresh token in DB (rotation-friendly)
-    const expiresIn = Number(
-      process.env.REFRESH_TOKEN_EXPIRES_IN ?? 60 * 60 * 24 * 7
-    );
-    const expiresAt = new Date(Date.now() + expiresIn * 1000);
+    const expiresAt = new Date(Date.now() + session_exp_at);
+    // console.log(expiresAt)
 
     // Track userAgent / ip
     // const userAgent = req.headers.get("user-agent") ?? undefined;
@@ -132,7 +131,7 @@ export const loginCtrl = async (req, res) => {
       refreshToken,
       userAgent: userAgent,
       ip: ip,
-      expiresAt: toString(expiresAt),
+      expiresAt: (expiresAt).toISOString(),
     });
     if (!session){
       resSend(res, 400, { success: false, error: "Session is not created!" });
@@ -167,7 +166,7 @@ export const loginCtrl = async (req, res) => {
   }
 };
 
-//  * REFRESH TOKEN
+//  ^ REFRESH TOKEN // update session time when use
 export const refresh = async (req, res) => {
   try {
     const incomingRefresh = req.cookies.refresh_token;
@@ -188,7 +187,7 @@ export const refresh = async (req, res) => {
     // check session in db
     const session = await Session.query()
       .where({ refreshToken: incomingRefresh })
-      .andWhere("expiresAt", ">", new Date())
+      .andWhere("expiresAt", ">", new Date()) // review this when use
       .first();
 
     if (!session) {
@@ -198,8 +197,7 @@ export const refresh = async (req, res) => {
     }
 
     const newRefresh = generateRefreshToken({id: session.userId})
-    const expiresIn = Number(process.env.REFRESH_TOKEN_EXPIRES_IN ?? 60 * 60 * 24 * 7);
-    const expiresAt = new Date(Date.now() + expiresIn * 1000);
+    const expiresAt = new Date(Date.now() + session_exp_at);
 
     const userAgent = req.headers["user-agent"] ?? undefined;
     const ip = req.ip ?? undefined;
@@ -214,7 +212,7 @@ export const refresh = async (req, res) => {
         refreshToken: newRefresh,
         userAgent: userAgent ?? null,
         ip,
-        expiresAt: toString(expiresAt),
+        expiresAt: expiresAt.toISOString(),
       });
     });
 
@@ -247,15 +245,18 @@ export const refresh = async (req, res) => {
 export const logoutCtrl = async (req, res) => {
   try {
     const incomingRefresh = req.cookies.refresh_token;
-    console.log('incomingRefresh: ', incomingRefresh)
-
+    // console.log('incomingRefresh: ', incomingRefresh)
+    if(!incomingRefresh){
+      return resSend(res, 400, {success:false, message: "You are not loggedIn"})
+    }
     if (incomingRefresh) {
       await Session.query().delete().where({ refreshToken: incomingRefresh });
     }
+    const decoded = verifyRefreshToken(incomingRefresh);
 
     clearCookie(res, "access_token");
     clearCookie(res, "refresh_token");
-    console.log(`✔️ User logout success!`);
+    console.log(`✅ User logout success! Id: ${decoded.id}`);
     return resSend(res, 200, {
       success: true,
       ok: true,
