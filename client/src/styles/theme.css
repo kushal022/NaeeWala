@@ -1,0 +1,26 @@
+
+:root {
+  --bg: #D3C3B9;
+  --bg-soft: #A79E9C;
+  --text: #10232A;
+  --text-muted: #3D4D55;
+  --primary: #10232A;
+  --accent: #B58863;
+  --card: #ffffff;
+}
+
+.dark {
+  --bg: #0C1519;
+  --bg-soft: #161616;
+  --text: #D3C3B9;
+  --text-muted: #A79E9C;
+  --primary: #10232A;
+  --accent: #B58863;
+  --card: #161616;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+}
