@@ -6,11 +6,9 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="px-4 py-2 rounded-md text-sm
-        bg-[#B58863] text-white
-        hover:opacity-90 transition"
+      className="px-3 py-1 rounded bg-bg text-text border border-black/20 dark:border-white/20"
     >
-      {theme === "dark" ? "☀ Light" : "🌙 Dark"}
+      {theme === "light" ? "🌙 Dark" : "☀️ Light"}
     </button>
   );
 }

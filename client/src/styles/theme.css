@@ -1,4 +1,55 @@
+@import "tailwindcss";
 
+/* ===============================
+   LIGHT THEME (default)
+================================ */
+:root {
+  --color-bg: #D3C3B9;
+  --color-surface: #A79E9C;
+  --color-text: #10232A;
+  --color-muted: #3D4D55;
+  --color-accent: #B58863;
+}
+
+/* ===============================
+   DARK THEME
+================================ */
+.dark {
+  --color-bg: #0C1519;
+  --color-surface: #161616;
+  --color-text: #D3C3B9;
+  --color-muted: #A79E9C;
+  --color-accent: #B58863;
+}
+
+
+
+@layer utilities {
+  .bg-bg {
+    background-color: var(--color-bg);
+  }
+
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+
+  .text-text {
+    color: var(--color-text);
+  }
+
+  .text-muted {
+    color: var(--color-muted);
+  }
+
+  .text-accent {
+    color: var(--color-accent);
+  }
+}
+
+
+
+
+/* 
 :root {
   --bg: #D3C3B9;
   --bg-soft: #A79E9C;
@@ -24,4 +75,4 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, sans-serif;
-}
+} */
