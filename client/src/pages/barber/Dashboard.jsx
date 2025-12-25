@@ -14,7 +14,7 @@ export default function BarberDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card title="Today Appointments" value="12" />
         <Card title="Total Earnings" value="₹4,200" />
-        <Card title="Rating" value="4.8 ⭐" />
+        <Card title="Rating" value="4.9 ⭐" />
       </div>
     </div>
   );
