@@ -6,22 +6,6 @@ import { generateUniqueUsername } from "../../utils/helper/usernameHelper.js";
 import knex from "../../db/knex.js";
 import { generateAccessToken, generateRefreshToken } from "../../utils/helper/jwtHelper.js";
 
-// import User from "@/models/User.js";
-// import OTP from "@/models/OTP.js";
-// import Address from "@/models/Address.js";
-// import Barber from "@/models/Barber.js";
-// import BarberShop from "@/models/BarberShop.js";
-// import Bank from "@/models/Bank.js";
-// import Session from "@/models/Session.js";
-
-// import { resSend } from "@/utils/helper/resHelper.js";
-// import { generateUniqueUsername } from "@/utils/helper/usernameHelper.js";
-// import {
-//   generateAccessToken,
-//   generateRefreshToken
-// } from "@/utils/helper/jwtHelper.js";
-// import { setCookie } from "@/utils/helper/cookieHelper.js";
-
 const access_token_cookie_exp =Number( process.env.ACCESS_TOKEN_COOKIE_EXP || 15 * 60 * 1000); //900000 : 15MIN
 const refresh_token_cookie_exp =Number( process.env.REFRESH_TOKEN_COOKIE_EXP || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
 const session_exp_at =Number( process.env.SESSION_EXP_AT || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
@@ -41,29 +25,6 @@ export async function barberRegisterCtrl(req, res) {
       bank
     } = req.body;
 
-    /* ---------------------------
-       VERIFY OTP (hashed)
-    ---------------------------- */
-    // const hashedOtp = crypto
-    //   .createHash("sha256")
-    //   .update(String(otp))
-    //   .digest("hex");
-
-    // const otpRecord = await OTP.query()
-    //   .where("to", email)
-    //   .where("code", hashedOtp)
-    //   .where("used", false)
-    //   .where("expires_at", ">", new Date())
-    //   .orderBy("created_at", "desc")
-    //   .first();
-
-    // if (!otpRecord) {
-    //   return resSend(
-    //     res,
-    //     { success: false, error: "Invalid or expired OTP" },
-    //     400
-    //   );
-    // }
 
     /* ---------------------------
      CHECK USER EXISTS
@@ -88,16 +49,6 @@ export async function barberRegisterCtrl(req, res) {
     let newUser, barber;
 
     await knex.transaction(async (trx) => {
-      // mark OTP used
-    //   await Otp.query(trx)
-    //     .findById(otpRecord.id)
-    //     .patch({ used: true });
-
-    //   // cleanup other OTPs
-    //   await OTP.query(trx)
-    //     .where("to", email)
-    //     .delete();
-
       // create user
       newUser = await User.query(trx).insert({
         firstName: firstName,
