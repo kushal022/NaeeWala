@@ -1,19 +1,9 @@
 import { z } from "zod";
 
-export const registerSchema = z.object({
-  firstName: z.string().min(1).optional(),
-  lastName: z.string().min(1).optional(),
-  fullName: z.string().min(1).optional(), // optional if you send fullName
-  email: z.string().email(),
-  phone: z.string().optional(),
-  password: z.string().min(6),
-});
-
-//^ Barber: 
 /* -----------------------------
   Reusable primitives
 ------------------------------ */
-const indianPhone = z
+const phone = z
   .string()
   .regex(/^[6-9]\d{9}$/, "Invalid phone number");
 
@@ -26,11 +16,22 @@ const strongPassword = z
 
 const latLng = z.number().min(-180).max(180);
 
+
+// Auth:
+export const registerSchema = z.object({
+  firstName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
+  // fullName: z.string().min(1).optional(), // optional if you send fullName
+  email: z.string().email(),
+  phone: phone,
+  password: strongPassword,
+});
+
 /* -----------------------------
   Address schema
 ------------------------------ */
 const addressSchema = z.object({
-  street: z.string().min(3),
+  street: z.string().min(1),
   landmark: z.string().optional(),
   city: z.string().min(2),
   state: z.string().min(2),
@@ -48,6 +49,29 @@ const shopSchema = z.object({
   description: z.string().max(500).optional(),
   shopType: z.enum(["salon", "barber", "unisex"]),
 });
+
+import { z } from "zod";
+
+export const deleteShopSchema = z.object({
+  params: z.object({
+    shopId: z.coerce.number().int().positive(),
+  }),
+});
+
+
+// src/validators/barberShop.validator.js
+import { z } from "zod";
+
+export const createShopSchema = z.object({
+  shopName: z.string().min(3),
+  description: z.string().optional(),
+  licenseNo: z.string().optional(),
+  shopType: z.string().optional(),
+  openingTime: z.string().optional(),
+  closingTime: z.string().optional(),
+  addressId: z.number().optional()
+});
+
 
 /* -----------------------------
   Bank schema (optional)
@@ -92,7 +116,7 @@ export const barberRegisterSchema = z.object({
   lastName: z.string().min(2),
 
   email: z.string().email(),
-  phone: indianPhone,
+  phone: phone,
 
   password: strongPassword,
   otp: z.string().length(6).optional(), // optional since you’re not validating it here

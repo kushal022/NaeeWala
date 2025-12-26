@@ -4,11 +4,6 @@ import { reverseGeocode } from "../../services/location/reverse";
 import { Rectangle } from "react-leaflet";
 import MapController from "./MapController";
 import { GeoJSON } from "react-leaflet";
-// import geoBoundariesCGAZ_ADM2 from "../../data/location/geoBoundariesCGAZ_ADM2.geojson"
-
-
-
-
 
 export default function LocationPicker({ value, onChange, boundary, formData }) {
   const [position, setPosition] = useState({
@@ -104,6 +99,7 @@ export default function LocationPicker({ value, onChange, boundary, formData }) 
 
   const autoZoom = getZoomByAddressType(formData.address.addresstype);
 
+
   return (
     <div>
       <MapContainer
@@ -118,27 +114,8 @@ export default function LocationPicker({ value, onChange, boundary, formData }) 
         {/* Auto zoom to boundary */}
         <MapController position={position} zoom={autoZoom} />
 
-        {/* <GeoJSON
-          data={geoBoundariesCGAZ_ADM2}
-          style={{
-            color: "#2563eb",
-            weight: 2,
-            dashArray: "6 4",
-            fillColor: "#2563eb",
-            fillOpacity: 0.08,
-          }}
-        /> */}
-
         {/*  Draw boundary */}
         {bounds && (
-          // <Rectangle
-          //   bounds={bounds}
-          //   pathOptions={{
-          //     color: "blue",
-          //     weight: 1,
-          //     fillOpacity: 0.05,
-          //   }}
-          // />
           <Rectangle
             bounds={bounds}
             pathOptions={{

@@ -6,9 +6,9 @@ import { generateUniqueUsername } from "../../utils/helper/usernameHelper.js";
 import knex from "../../db/knex.js";
 import { generateAccessToken, generateRefreshToken } from "../../utils/helper/jwtHelper.js";
 
-const access_token_cookie_exp =Number( process.env.ACCESS_TOKEN_COOKIE_EXP || 15 * 60 * 1000); //900000 : 15MIN
-const refresh_token_cookie_exp =Number( process.env.REFRESH_TOKEN_COOKIE_EXP || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
-const session_exp_at =Number( process.env.SESSION_EXP_AT || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
+const access_token_cookie_exp = Number(process.env.ACCESS_TOKEN_COOKIE_EXP || 15 * 60 * 1000); //900000 : 15MIN
+const refresh_token_cookie_exp = Number(process.env.REFRESH_TOKEN_COOKIE_EXP || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
+const session_exp_at = Number(process.env.SESSION_EXP_AT || 7 * 24 * 60 * 60 * 1000); //86400000*7=604800000 7DAYS
 
 
 export async function barberRegisterCtrl(req, res) {
@@ -25,27 +25,22 @@ export async function barberRegisterCtrl(req, res) {
       bank
     } = req.body;
 
+    const fullName = `${firstName} ${lastName}`;
+    const username = await generateUniqueUsername(fullName, email);
 
-    /* ---------------------------
-     CHECK USER EXISTS
-    ---------------------------- */
+    //  CHECK USER EXISTS
     const exists = await User.query()
       .where("email", email)
       .orWhere("phone", phone)
       .first();
 
     if (exists) {
-      return resSend(res, 409,{ success: false, message: "User already exists" });
+      return resSend(res, 409, { success: false, message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const fullName = `${firstName} ${lastName}`;
-    const username = await generateUniqueUsername(fullName, email);
-
-    /* ---------------------------
-     ATOMIC CREATION
-    ---------------------------- */
+    //  ATOMIC CREATION
     let newUser, barber;
 
     await knex.transaction(async (trx) => {
@@ -120,9 +115,9 @@ export async function barberRegisterCtrl(req, res) {
     });
 
     const refreshToken = generateRefreshToken({ id: newUser.id });
-     const userAgent = req.headers["user-agent"] ?? undefined;
+    const userAgent = req.headers["user-agent"] ?? undefined;
     const ip = req.ip ?? undefined;
-    const expiresAt = (new Date(Date.now() +  session_exp_at));
+    const expiresAt = (new Date(Date.now() + session_exp_at));
     // console.log("expiresAt:", expiresAt.toISOString())
 
 
@@ -137,7 +132,7 @@ export async function barberRegisterCtrl(req, res) {
       expiresAt: (expiresAt).toISOString()
     });
 
-        // RESPONSE
+    // RESPONSE
     const response = resSend(
       res, 201,
       {
@@ -169,7 +164,7 @@ export async function barberRegisterCtrl(req, res) {
   } catch (err) {
     console.error("❌ BARBER REGISTER ERROR:", err);
     return resSend(
-      res,500,
+      res, 500,
       { success: false, message: "Server error" },
     );
   }

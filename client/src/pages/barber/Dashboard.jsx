@@ -2,12 +2,19 @@
 import { useEffect, useState } from "react";
 import MapNominatim from "../../component/location/MapNominatim";
 import MapGoogle from "../../component/location/MapGoogle";
+import StatCard from "../../component/barber/StatCard";
 
 export default function BarberDashboard() {
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Dashboard</h2>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <StatCard title="Total Bookings" value="120" />
+        <StatCard title="Today Appointments" value="8" />
+        <StatCard title="Earnings" value="₹4,500" />
+        <StatCard title="Rating" value="4.6 ★" />
+      </div>
       {/* <MapGoogle />  */}
       <MapNominatim />
 

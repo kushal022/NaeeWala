@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { barberRegisterCtrl } from "../../controllers/barber/auth.controller.js";
+import { addBarberShopCtrl } from "../../controllers/barber/shop.controller.js";
 
 
 router.post("/register", barberRegisterCtrl);
